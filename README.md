@@ -52,8 +52,26 @@ spec:
 ```
 
 ### `secrets[].path`
+
+This is where you define where inside Vault's key-value store the secret should
+be situated. This field is mandatory.
+
+
 ### `secrets[].properties`
-### `secrets[].properties.*.type`
-### `secrets[].properties.*.input`
-### `secrets[].properties.*.default`
-### `secrets[].properties.*.help`
+
+Each secret consists of at least one property which you can define here using a
+dictionary-like structure. Properties consist of a type (default `string`) and
+also have a `default` value. The user is prompted to enter a value which is
+then validated against this type. If the user's input should not be printed,
+use `input: password`.
+
+Summarizing, each property can have the following settings:
+
+* `type`: The type of the property (e.g. `string`, `int`, `float`, ...),
+  default: `string`)
+* `input`: Defines how the user should be prompted for input (`password` or
+  `default`).
+* `help`: When the user is prompted for input, this message is shown alongside
+  the property's name.
+* `default`: The default value that should be used if the user simply hits
+  [ENTER] when prompted.
