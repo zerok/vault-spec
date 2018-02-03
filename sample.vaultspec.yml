@@ -1,0 +1,18 @@
+version: '1'
+spec:
+  secrets:
+    - path: secrets/sample
+      properties:
+        username:
+          type: string
+          default: sample-default
+          help: |
+            This is the username you would normally use to connect to the
+            target server.
+        password:
+          type: string
+          input: password
+          help: |
+            Be creative here!
+
+
