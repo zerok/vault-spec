@@ -10,24 +10,24 @@ func TestV1Validation(t *testing.T) {
 	e.RawSpec.RawSecrets = map[string]secretV1{
 		"secret1": secretV1{
 			RawProperties: map[string]propertyV1{
-				"stringProp": propertyV1{
-					RawTypeName: "string",
-					RawDefault:  0,
+				"intProp": propertyV1{
+					RawTypeName: "integer",
+					RawDefault:  "0-with-string",
 				},
 			},
 		},
 	}
 	err := e.Validate()
 	if err == nil {
-		t.Fatal("Setting 0 as default value for a string property should have produced an error")
+		t.Fatal("Setting a string as default value for an integer property should have produced an error")
 	}
-	e.RawSpec.RawSecrets["secret1"].RawProperties["stringProp"] = propertyV1{
-		RawTypeName: "string",
-		RawDefault:  "stringvalue",
+	e.RawSpec.RawSecrets["secret1"].RawProperties["intProp"] = propertyV1{
+		RawTypeName: "integer",
+		RawDefault:  0,
 	}
 	err = e.Validate()
 	if err != nil {
-		t.Fatalf("\"stringvalue\" as default value for a string property should have been valid. Got %s instead.", err)
+		t.Fatalf("\"0\" as default value for an integer property should have been valid. Got %s instead.", err)
 	}
 }
 

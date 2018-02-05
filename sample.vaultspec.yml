@@ -10,9 +10,9 @@ spec:
             This is the username you would normally use to connect to the
             target server.
         password:
-          type: string
+          type: integer
           input: hidden
-          default: "123"
+          default: 123
           help: |
             Be creative here!
 
