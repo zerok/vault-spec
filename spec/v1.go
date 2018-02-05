@@ -1,6 +1,7 @@
 package spec
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 )
@@ -48,16 +49,21 @@ func (v *validatorV1) checkDefaultsOfRightType() {
 				break
 			case "integer":
 				switch prop.RawDefault.(type) {
+				case int8:
+				case int16:
 				case int32:
 				case int64:
+				case uint8:
+				case uint16:
 				case uint32:
 				case uint64:
 				case int:
-					continue propLoop
+				default:
+					v.err = ErrSpec1PropInvalidDefault{Path: path, Key: key, Default: prop.RawDefault}
+					return
 				}
-				break
+				continue propLoop
 			}
-			v.err = ErrSpec1PropInvalidDefault{Path: path, Key: key, Default: prop.RawDefault}
 		}
 	}
 }
@@ -119,6 +125,9 @@ type secretV1 struct {
 }
 
 func (s *secretV1) Label() string {
+	if s.RawLabel == "" {
+		return s.RawPath
+	}
 	return s.RawLabel
 }
 
@@ -143,6 +152,7 @@ type propertyV1 struct {
 	RawDefault  interface{} `yaml:"default"`
 	RawHelp     string      `yaml:"help"`
 	RawInput    string      `yaml:"input"`
+	RawName     string      `yaml:"-"`
 }
 
 func (p *propertyV1) String() string {
@@ -170,6 +180,7 @@ func (p *propertyV1) IsValidData(data interface{}) error {
 		case uint16:
 		case uint32:
 		case uint64:
+		case json.Number:
 		default:
 			return fmt.Errorf("Invalid data %v for integer type", reflect.TypeOf(data))
 		}
@@ -195,5 +206,8 @@ func (p *propertyV1) Input() string {
 }
 
 func (p *propertyV1) Label() string {
+	if p.RawLabel == "" {
+		return p.RawName
+	}
 	return p.RawLabel
 }

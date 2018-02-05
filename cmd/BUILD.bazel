@@ -11,6 +11,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//spec:go_default_library",
+        "//vendor/github.com/chzyer/readline:go_default_library",
         "//vendor/github.com/hashicorp/vault/api:go_default_library",
         "//vendor/github.com/sirupsen/logrus:go_default_library",
         "//vendor/github.com/spf13/cobra:go_default_library",

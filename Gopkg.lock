@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/chzyer/readline"
+  packages = ["."]
+  revision = "62c6fe6193755f722b8b8788aa7357be55a50ff1"
+  version = "v1.4"
+
+[[projects]]
   name = "github.com/fatih/structs"
   packages = ["."]
   revision = "a720dfa8df582c51dee1b36feabb906bde1588bd"
@@ -162,6 +168,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "26757ec64d08c16463682e3b8c1ac227f334e2a0396ad7a6c8c3f446ec6fe2b3"
+  inputs-digest = "eaf52984136ff2b5c27d731c3582236e2088777167655505f54c836d8f496bc6"
   solver-name = "gps-cdcl"
   solver-version = 1

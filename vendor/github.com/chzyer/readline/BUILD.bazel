@@ -1,0 +1,67 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "char.go",
+        "complete.go",
+        "complete_helper.go",
+        "complete_segment.go",
+        "debug.go",
+        "doc.go",
+        "history.go",
+        "operation.go",
+        "password.go",
+        "readline.go",
+        "remote.go",
+        "runebuf.go",
+        "runes.go",
+        "search.go",
+        "std.go",
+        "terminal.go",
+        "utils.go",
+        "vim.go",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "term.go",
+            "term_bsd.go",
+            "utils_unix.go",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "term.go",
+            "term_bsd.go",
+            "utils_unix.go",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "term.go",
+            "term_bsd.go",
+            "utils_unix.go",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "term.go",
+            "term_linux.go",
+            "utils_unix.go",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "term.go",
+            "term_bsd.go",
+            "utils_unix.go",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "term.go",
+            "term_bsd.go",
+            "utils_unix.go",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "ansi_windows.go",
+            "rawreader_windows.go",
+            "std_windows.go",
+            "term_windows.go",
+            "utils_windows.go",
+            "windows_api.go",
+        ],
+        "//conditions:default": [],
+    }),
+    importpath = "github.com/chzyer/readline",
+    visibility = ["//visibility:public"],
+)
