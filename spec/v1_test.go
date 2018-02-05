@@ -1,6 +1,9 @@
 package spec
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestV1Validation(t *testing.T) {
 	e := envelopV1{}
@@ -28,12 +31,18 @@ func TestV1Validation(t *testing.T) {
 	}
 }
 
+type dataValidationTestCase struct {
+	spec  propertyV1
+	data  interface{}
+	valid bool
+}
+
+func (d dataValidationTestCase) String() string {
+	return fmt.Sprintf("<spec=%s data=%v valid=%v>", d.spec, d.data, d.valid)
+}
+
 func TestV1DataValidation(t *testing.T) {
-	tests := []struct {
-		spec  propertyV1
-		data  interface{}
-		valid bool
-	}{
+	tests := []dataValidationTestCase{
 		{
 			spec: propertyV1{
 				RawTypeName: "string",

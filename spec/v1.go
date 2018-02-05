@@ -1,6 +1,9 @@
 package spec
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 type validatorV1 struct {
 	err  error
@@ -147,6 +150,31 @@ func (p *propertyV1) String() string {
 }
 
 func (p *propertyV1) IsValidData(data interface{}) error {
+	switch p.RawTypeName {
+	case "string":
+		switch data.(type) {
+		case string:
+		default:
+			return fmt.Errorf("Invalid data for string type")
+		}
+		return nil
+	case "integer":
+		switch data.(type) {
+		case int:
+		case int8:
+		case int16:
+		case int32:
+		case int64:
+		case uint:
+		case uint8:
+		case uint16:
+		case uint32:
+		case uint64:
+		default:
+			return fmt.Errorf("Invalid data %v for integer type", reflect.TypeOf(data))
+		}
+		return nil
+	}
 	return nil
 }
 

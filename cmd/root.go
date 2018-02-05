@@ -26,6 +26,7 @@ import (
 var vaultClient *vault.Client
 var specFile string
 var logger *logrus.Logger
+var verbose bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -44,9 +45,13 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&specFile, "spec-file", "f", "", "Path to the spec file")
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Verbose logging")
 	logger = logrus.New()
 	var err error
 	cobra.OnInitialize(func() {
+		if verbose {
+			logger.SetLevel(logrus.DebugLevel)
+		}
 		vaultCfg := vault.DefaultConfig()
 		if err = vaultCfg.ReadEnvironment(); err != nil {
 			logger.WithError(err).Fatal("Failed to read Vault environment variables.")
