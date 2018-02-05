@@ -1,7 +1,7 @@
 version: "1"
 spec:
   secrets:
-    secret/sample:
+    sample:
       properties:
         username:
           type: string

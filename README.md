@@ -20,6 +20,19 @@ will be using.
    `VAULT_ADDR` and `VAULT_TOKEN` set up with capabilities to create policies
    and write to the specified secret paths.
 
+If you're working on the same project in multiple environment, you should keep
+your configurations in different "sub-trees" inside Vault. Let's say you have
+the configuration for the test-system under `secret/project/test/mainconfig`
+and the one for your local system on `secret/project/local/mainconfig`. In this
+case, you should keep the prefix of each environment (e.g.
+`secret/project/test/` out of the specification but instead set it using the
+`--prefix` flag:
+
+```
+$ vault-spec apply -f sample.vaultspec.yaml \
+    --prefix secret/project/test/
+```
+
 
 ## Configuration format
 

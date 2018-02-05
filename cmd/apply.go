@@ -25,6 +25,8 @@ import (
 	"github.com/zerok/vault-spec/spec"
 )
 
+var prefix string
+
 // UI is a generic interface for handling user interfaces for allowing users to
 // enter data about a property.
 type UI interface {
@@ -106,7 +108,8 @@ var applyCmd = &cobra.Command{
 		}
 
 		for _, path := range spc.SecretPaths() {
-			plog := logger.WithField("path", path)
+			finalPath := prefix + path
+			plog := logger.WithField("path", finalPath)
 			plog.Debug("Applying secret spec")
 			secretSpec := spc.Secret(path)
 			if secretSpec == nil {
@@ -115,7 +118,7 @@ var applyCmd = &cobra.Command{
 			}
 			ui := terminalUI{}
 			ui.SetLogger(plog)
-			if err := applySecretSpec(vaultClient, path, secretSpec, &ui, plog); err != nil {
+			if err := applySecretSpec(vaultClient, finalPath, secretSpec, &ui, plog); err != nil {
 				plog.WithError(err).Fatal("Failed to apply secret spec.")
 			}
 		}
@@ -160,5 +163,6 @@ func applySecretSpec(vaultClient *vault.Client, path string, spc spec.Secret, ui
 }
 
 func init() {
+	applyCmd.Flags().StringVarP(&prefix, "prefix", "p", "", "Prefix used for the secrets path")
 	rootCmd.AddCommand(applyCmd)
 }
