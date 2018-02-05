@@ -45,17 +45,14 @@ know JSON Schema, this is pretty similar:
 ```
 spec:
   secrets:
-    - path: secrets/path/to/secret
+    secrets/path/to/secret:
       properties:
         username: ...
         password: ...
 ```
 
-### `secrets[].path`
-
-This is where you define where inside Vault's key-value store the secret should
-be situated. This field is mandatory.
-
+Secrets are defined as a dictionary with the target path being the key and the
+secret's definition as the value.
 
 ### `secrets[].properties`
 
