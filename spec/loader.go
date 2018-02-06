@@ -46,6 +46,8 @@ func FromPath(path string) (Specification, error) {
 	}
 }
 
+// normalizeSpec sets default values inside a parsed environment and normalizes
+// data entries.
 func normalizeSpec(env *envelopV1) error {
 	for secretPath, secretSpec := range env.RawSpec.RawSecrets {
 		secretSpec.RawPath = secretPath
@@ -68,6 +70,8 @@ func normalizeSpec(env *envelopV1) error {
 	return nil
 }
 
+// convertDefaultValue converts the parsed value into the requested target
+// type.
 func convertDefaultValue(v interface{}, typeName string) (interface{}, error) {
 	switch typeName {
 	case "string":

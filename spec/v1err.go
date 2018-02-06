@@ -13,17 +13,24 @@
 // limitations under the License.
 package spec
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
+// ErrSpec1PropInvalidInput is returned if the specification contains an
+// unknown input.
 type ErrSpec1PropInvalidInput struct {
 	Path string
 	Key  string
 }
 
 func (err ErrSpec1PropInvalidInput) Error() string {
-	return fmt.Sprintf("Invalid input defined for %s/%s", err.Path, err.Key)
+	return fmt.Sprintf("invalid input defined for %s/%s", err.Path, err.Key)
 }
 
+// ErrSpec1PropInvalidType is returned if the specification refers to an
+// unknown type.
 type ErrSpec1PropInvalidType struct {
 	Path string
 	Key  string
@@ -31,9 +38,11 @@ type ErrSpec1PropInvalidType struct {
 }
 
 func (err ErrSpec1PropInvalidType) Error() string {
-	return fmt.Sprintf("Invalid type defined for %s/%s: %s", err.Path, err.Key, err.Type)
+	return fmt.Sprintf("invalid type defined for %s/%s: %s", err.Path, err.Key, err.Type)
 }
 
+// ErrSpec1PropInvalidDefault is returned if the specification uses a default
+// value that doesn't match the specified type.
 type ErrSpec1PropInvalidDefault struct {
 	Path    string
 	Key     string
@@ -41,5 +50,5 @@ type ErrSpec1PropInvalidDefault struct {
 }
 
 func (err ErrSpec1PropInvalidDefault) Error() string {
-	return fmt.Sprintf("Invalid default defined for %s/%s: %s", err.Path, err.Key, err.Default)
+	return fmt.Sprintf("invalid default defined for %s/%s: `%v` (type=%s)", err.Path, err.Key, err.Default, reflect.TypeOf(err.Default))
 }

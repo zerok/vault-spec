@@ -15,6 +15,7 @@ package spec
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -30,17 +31,29 @@ func TestV1Validation(t *testing.T) {
 			},
 		},
 	}
-	err := e.Validate()
-	if err == nil {
-		t.Fatal("Setting a string as default value for an integer property should have produced an error")
+	tests := []struct {
+		rawDefault interface{}
+		valid      bool
+	}{
+		{0, true},
+		{"0-with-string", false},
+		{int64(0), true},
 	}
-	e.RawSpec.RawSecrets["secret1"].RawProperties["intProp"] = propertyV1{
-		RawTypeName: "integer",
-		RawDefault:  0,
-	}
-	err = e.Validate()
-	if err != nil {
-		t.Fatalf("\"0\" as default value for an integer property should have been valid. Got %s instead.", err)
+
+	for _, test := range tests {
+		secretSpec := e.RawSpec.RawSecrets["secret1"]
+		propSpec := secretSpec.RawProperties["intProp"]
+		propSpec.RawDefault = test.rawDefault
+		secretSpec.RawProperties["intProp"] = propSpec
+		e.RawSpec.RawSecrets["secret1"] = secretSpec
+
+		err := e.Validate()
+		if err == nil && !test.valid {
+			t.Fatal("Setting %v (type=%s) as default value for an integer property should have produced an error", test.rawDefault, reflect.TypeOf(test.rawDefault))
+		}
+		if err != nil && test.valid {
+			t.Fatalf("%v (type=%s) as default value for an integer property should have been valid. Got %s instead.", test.rawDefault, reflect.TypeOf(test.rawDefault), err)
+		}
 	}
 }
 

@@ -16,8 +16,10 @@ package spec
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 )
+
+const stringType = "string"
+const integerType = "integer"
 
 type validatorV1 struct {
 	err  error
@@ -32,8 +34,9 @@ func (v *validatorV1) checkValidPropTypes() {
 	propLoop:
 		for key, prop := range sec.RawProperties {
 			switch prop.RawTypeName {
-			case "string":
-			case "integer":
+			case stringType:
+				continue propLoop
+			case integerType:
 				continue propLoop
 			default:
 				v.err = ErrSpec1PropInvalidType{Path: path, Key: key, Type: prop.RawTypeName}
@@ -41,6 +44,22 @@ func (v *validatorV1) checkValidPropTypes() {
 			}
 		}
 	}
+}
+
+func isValidString(data interface{}) bool {
+	switch data.(type) {
+	case string:
+		return true
+	}
+	return false
+}
+
+func isValidInteger(data interface{}) bool {
+	switch data.(type) {
+	case json.Number, int8, int16, int32, int64, uint8, uint16, uint32, uint64, int, uint:
+		return true
+	}
+	return false
 }
 
 func (v *validatorV1) checkDefaultsOfRightType() {
@@ -54,29 +73,18 @@ func (v *validatorV1) checkDefaultsOfRightType() {
 				continue propLoop
 			}
 			switch prop.RawTypeName {
-			case "string":
-				switch prop.RawDefault.(type) {
-				case string:
+			case stringType:
+				if isValidString(prop.RawDefault) {
 					continue propLoop
 				}
 				break
-			case "integer":
-				switch prop.RawDefault.(type) {
-				case int8:
-				case int16:
-				case int32:
-				case int64:
-				case uint8:
-				case uint16:
-				case uint32:
-				case uint64:
-				case int:
-				default:
-					v.err = ErrSpec1PropInvalidDefault{Path: path, Key: key, Default: prop.RawDefault}
-					return
+			case integerType:
+				if isValidInteger(prop.RawDefault) {
+					continue propLoop
 				}
-				continue propLoop
+				break
 			}
+			v.err = ErrSpec1PropInvalidDefault{Path: path, Key: key, Default: prop.RawDefault}
 		}
 	}
 }
@@ -174,30 +182,16 @@ func (p *propertyV1) String() string {
 
 func (p *propertyV1) IsValidData(data interface{}) error {
 	switch p.RawTypeName {
-	case "string":
-		switch data.(type) {
-		case string:
-		default:
-			return fmt.Errorf("Invalid data for string type")
+	case stringType:
+		if !isValidString(data) {
+			return fmt.Errorf("Invalid data %v for string type", data)
 		}
-		return nil
-	case "integer":
-		switch data.(type) {
-		case int:
-		case int8:
-		case int16:
-		case int32:
-		case int64:
-		case uint:
-		case uint8:
-		case uint16:
-		case uint32:
-		case uint64:
-		case json.Number:
-		default:
-			return fmt.Errorf("Invalid data %v for integer type", reflect.TypeOf(data))
+		break
+	case integerType:
+		if !isValidInteger(data) {
+			return fmt.Errorf("Invalid data %v for integer type", data)
 		}
-		return nil
+		break
 	}
 	return nil
 }
