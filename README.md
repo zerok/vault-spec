@@ -9,6 +9,15 @@ Using a single configuration file you can configure Vault to contain a certain
 structure within the key-value store and also a set of policies that your app
 will be using.
 
+## Installation
+
+For macOS we've provided a brew tap:
+
+```
+$ brew tap zerok/main https://github.com/zerok/homebrew-tap
+$ brew install zerok/main/vault-spec
+```
+
 ## Usage
 
 1. Define a spec file (e.g. `sample.vaultspec.yaml`) for your Vault instance.
